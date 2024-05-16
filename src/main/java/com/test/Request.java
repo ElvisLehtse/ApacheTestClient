@@ -6,9 +6,38 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
-public class RequestCreater {
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Request {
+    private final CloseableHttpClient httpClient = HttpClients.createDefault();
+    // Map to store user input
+    private List<String> userInput = new ArrayList<>();
+
+    /**
+     * Sends a user-defined choice to the server.
+     *
+     * @return True if the client should continue running, false if it should terminate.
+     */
+    void SendChoice () {
+        System.out.println("What would you like to do?");
+        System.out.println("read / add / modify / delete / reset / exit");
+        UserInput userInput = new UserInput();
+        this.userInput = userInput.userChoice();
+        try {
+            switch (this.userInput.getFirst()) {
+                case "read" -> sendGet(httpClient);
+                case "add", "modify", "delete", "reset" -> sendPost(httpClient);
+                case "exit" -> close();
+            }
+        } catch (Exception e) {
+            System.out.println(STR."\{e.getMessage()} Error closing http client");
+        }
+    }
 
     public void sendGet (CloseableHttpClient httpClient) {
 
@@ -32,8 +61,12 @@ public class RequestCreater {
         HttpPost post = new HttpPost(url);
 
         // POST message body
-        String userInput = "test";
-        HttpEntity messageEntity = new ByteArrayEntity(userInput.getBytes());
+        StringBuilder input = new StringBuilder();
+        for (String line : userInput) {
+            input.append(line).append("\n");
+        }
+        String userLine = input.toString();
+        HttpEntity messageEntity = new ByteArrayEntity(userLine.getBytes());
         post.setEntity(messageEntity);
 
         try {
@@ -46,5 +79,8 @@ public class RequestCreater {
         } catch (Exception e){
             System.out.println(STR."\{e.getMessage()} Could not send POST request to \{url}");
         }
+    }
+    private void close() throws IOException {
+        httpClient.close();
     }
 }
