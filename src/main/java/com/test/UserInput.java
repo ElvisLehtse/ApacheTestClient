@@ -38,15 +38,15 @@ class UserInput {
      * @return A map containing user input for the selected action.
      */
     List<String> userChoice () {
-        String[] message = messageString();     // This is the pre-defined messages for the user to see
+        String[] message = messageString();         // This is the pre-defined messages for the user to see
         String choice = userInputScanner();
-        List<String> userInput = new ArrayList<>(); // User data will be stored along with key values to be referred later on
-        userInput.add(choice);                      // All actions (read, add etc...) are pared with key0
+        List<String> userInput = new ArrayList<>();
+        userInput.add(choice);
 
         switch (choice) {                           // Process user choice
-            case "read", "reset", "exit" -> {}      // Does nothing: these actions do not need any additional input
+            case "read", "reset" -> {}              // Does nothing: these actions do not need any additional input
             case "add" -> {
-                for (String msg : message) {  // User info is stored in map
+                for (String msg : message) {        // User info is stored inside a list
                     System.out.println(msg);
                     userInput.add(userInputScanner());
                 }
@@ -54,7 +54,7 @@ class UserInput {
             case "modify" -> {
                 System.out.println("Old weapon's name:");
                 userInput.add(userInputScanner());
-                for (String s : message) {  // User info is stored in map
+                for (String s : message) {          // User info is stored inside a list
                     System.out.println(s);
                     userInput.add(userInputScanner());
                 }
@@ -63,6 +63,7 @@ class UserInput {
                 System.out.println("Weapon's name:");
                 userInput.add(userInputScanner());
             }
+            case "exit" -> System.exit(0);
             default -> System.out.println("Incorrect input\n");
         }
         return userInput;
