@@ -1,6 +1,7 @@
 package com.test;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 public class ApacheTestClient
 {
@@ -10,7 +11,7 @@ public class ApacheTestClient
             Request obj = new Request();
             try {
                 obj.SendChoice();
-            } catch (IOException e) {
+            } catch (IOException | URISyntaxException e) {
                 System.out.println(STR."\{e.getMessage()} Could not send request");
             }
         }

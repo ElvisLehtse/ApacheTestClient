@@ -1,12 +1,29 @@
 package com.test;
 
 import java.util.*;
+import org.json.JSONObject;
 
 /**
  * This class, UserInput, handles user input for client actions.
  * It prompts the user for their choice and collects input based on the selected action.
  */
 class UserInput {
+
+    private String userChoice;
+    private String oldWeapon;
+
+    public void setUserChoice(String userChoice) {
+        this.userChoice = userChoice;
+    }
+    public void setOldWeapon(String oldWeapon) {
+        this.oldWeapon = oldWeapon;
+    }
+    public String getUserChoice() {
+        return this.userChoice;
+    }
+    public String getOldWeapon() {
+        return this.oldWeapon;
+    }
 
     /**
      * Collects user input using the Scanner class.
@@ -18,18 +35,19 @@ class UserInput {
         return scanner.nextLine().toLowerCase();    // All user inputs will be handled as lower-case
     }
 
-    /**
-     * Used for printing out messages to the user.
-     *
-     * @return pre-defined messages as a String array.
-     */
-    private String[] messageString () {
-        return new String[]{
-                "Weapon's name:",
-                "Strength:",
-                "Speed:",
-                "Description:"
-        };
+    private JSONObject weaponData () {
+        JSONObject jsonObject = new JSONObject();
+        JSONObject jsonDetails = new JSONObject();
+        System.out.println("Weapon's name:");
+        String weaponsName = userInputScanner();
+        System.out.println("Strength:");
+        jsonDetails.put("str", userInputScanner());
+        System.out.println("Speed:");
+        jsonDetails.put("speed", userInputScanner());
+        System.out.println("Description:");
+        jsonDetails.put("desc", userInputScanner());
+        jsonObject.put(weaponsName, jsonDetails);
+        return jsonObject;
     }
 
     /**
@@ -37,35 +55,26 @@ class UserInput {
      *
      * @return A map containing user input for the selected action.
      */
-    List<String> userChoice () {
-        String[] message = messageString();         // This is the pre-defined messages for the user to see
-        String choice = userInputScanner();
-        List<String> userInput = new ArrayList<>();
-        userInput.add(choice);
+    JSONObject userJson () {
+        setUserChoice(userInputScanner());
+        JSONObject jsonObject = new JSONObject();
 
-        switch (choice) {                           // Process user choice
+        switch (getUserChoice()) {                           // Process user choice
             case "read", "reset" -> {}              // Does nothing: these actions do not need any additional input
-            case "add" -> {
-                for (String msg : message) {        // User info is stored inside a list
-                    System.out.println(msg);
-                    userInput.add(userInputScanner());
-                }
-            }
+            case "add" -> jsonObject = weaponData();
             case "modify" -> {
                 System.out.println("Old weapon's name:");
-                userInput.add(userInputScanner());
-                for (String s : message) {          // User info is stored inside a list
-                    System.out.println(s);
-                    userInput.add(userInputScanner());
-                }
+                setOldWeapon(userInputScanner());
+                jsonObject = weaponData();
             }
             case "delete" -> {
                 System.out.println("Weapon's name:");
-                userInput.add(userInputScanner());
+                setOldWeapon(userInputScanner());
+                return null;
             }
             case "exit" -> System.exit(0);
             default -> System.out.println("Incorrect input\n");
         }
-        return userInput;
+        return jsonObject;
     }
 }
