@@ -6,8 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="c8ebaabc-05de-4c80-8c44-8bbca69f8084" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/test/ApacheTestClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/test/ApacheTestClient.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/test/Request.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/test/Request.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/test/UserInput.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/test/UserInput.java" afterDir="false" />
     </list>
@@ -58,5 +56,15 @@
       <updated>1715839835582</updated>
     </task>
     <servers />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.IllegalArgumentException" package="java.lang" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

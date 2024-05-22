@@ -19,6 +19,7 @@ public class Request {
     private final CloseableHttpClient httpClient = HttpClients.createDefault();
     private JSONObject jsonObject = new JSONObject();
     private final UserInput userInput = new UserInput();
+    private String modifyOrReset;
 
     /**
      * Sends a user-defined choice to the server.
@@ -28,70 +29,76 @@ public class Request {
         System.out.println("read / add / modify / delete / reset / exit");
         jsonObject = userInput.userJson();
         switch (userInput.getUserChoice()) {
-            case "read" -> sendGet(httpClient);
-            case "add" -> sendPost(httpClient);
-            case "modify", "reset" -> {
-                sendPut(httpClient);
+            case "read" -> sendGet();
+            case "add" -> sendPost();
+            case "modify" -> {
+                modifyOrReset = "modify";
+                sendPut();
             }
-            case "delete" -> sendDelete(httpClient);
+            case "reset" -> {
+                modifyOrReset = "reset";
+                sendPut();
+            }
+            case "delete" -> sendDelete();
         }
         httpClient.close();
     }
 
-    public void sendGet (CloseableHttpClient httpClient) throws IOException {
-        String url = "http://localhost:8080/GET";
-        HttpGet getReq = new HttpGet(url);
-
-        CloseableHttpResponse response = httpClient.execute(getReq);
+    public void responseMessage (CloseableHttpResponse response) throws IOException {
         HttpEntity entity = response.getEntity();
         String responseMessage = EntityUtils.toString(entity);
         System.out.println(responseMessage);
     }
 
-    public void sendPost (CloseableHttpClient httpClient) throws IOException {
+    public void sendGet () throws IOException {
+        String url = "http://localhost:8080/GET";
+        HttpGet request = new HttpGet(url);
+        CloseableHttpResponse response = httpClient.execute(request);
+        responseMessage(response);
+
+    }
+
+    public void sendPost () throws IOException {
         String url = "http://localhost:8080/POST";
-        HttpPost postReq = new HttpPost(url);
-
-        // POST message body
+        HttpPost request = new HttpPost(url);
         HttpEntity messageEntity = new StringEntity
                 (String.valueOf(jsonObject), ContentType.APPLICATION_JSON);
-        postReq.setEntity(messageEntity);
-        CloseableHttpResponse response = httpClient.execute(postReq);
+        request.setEntity(messageEntity);
 
-        // Reply body from server
-        HttpEntity responseEntity = response.getEntity();
-        String responseMessage = EntityUtils.toString(responseEntity);
-        System.out.println(responseMessage);
+        CloseableHttpResponse response = httpClient.execute(request);
+        responseMessage(response);
     }
 
-    public void sendPut (CloseableHttpClient httpClient) throws IOException, URISyntaxException {
+    public void sendPut () throws IOException, URISyntaxException {
         URIBuilder builder = new URIBuilder("http://localhost:8080/PUT");
-        builder.setParameter("modify", userInput.getOldWeapon());
-        HttpPost putReq = new HttpPost(builder.build());
+        try {
+            if (modifyOrReset.equals("modify")) {
+                builder.setParameter("modify", userInput.getOldWeapon());
+            } else if (modifyOrReset.equals("reset")) {
+                builder.setParameter("reset", "all");
+            }
+            HttpPost request = new HttpPost(builder.build());
 
-        // PUT message body
-        HttpEntity messageEntity = new StringEntity
-                (String.valueOf(jsonObject), ContentType.APPLICATION_JSON);
-        putReq.setEntity(messageEntity);
-        CloseableHttpResponse response = httpClient.execute(putReq);
+            if (!modifyOrReset.equals("reset")) {
+                HttpEntity messageEntity = new StringEntity
+                        (String.valueOf(jsonObject), ContentType.APPLICATION_JSON);
+                request.setEntity(messageEntity);
+            }
+            CloseableHttpResponse response = httpClient.execute(request);
+            responseMessage(response);
 
-        // Reply body from server
-        HttpEntity responseEntity = response.getEntity();
-        String responseMessage = EntityUtils.toString(responseEntity);
-        System.out.println(responseMessage);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
 
     }
 
-    public void sendDelete (CloseableHttpClient httpClient) throws IOException, URISyntaxException {
+    public void sendDelete () throws IOException, URISyntaxException {
         URIBuilder builder = new URIBuilder("http://localhost:8080/DELETE");
         builder.setParameter("delete", userInput.getOldWeapon());
-        HttpPost deleteReq = new HttpPost(builder.build());
+        HttpPost request = new HttpPost(builder.build());
 
-        CloseableHttpResponse response = httpClient.execute(deleteReq);
-
-        // Reply body from server
-        HttpEntity responseEntity = response.getEntity();
-        String responseMessage = EntityUtils.toString(responseEntity);
-        System.out.println(responseMessage);
+        CloseableHttpResponse response = httpClient.execute(request);
+        responseMessage(response);
     }
 }

@@ -60,7 +60,7 @@ class UserInput {
         JSONObject jsonObject = new JSONObject();
 
         switch (getUserChoice()) {                           // Process user choice
-            case "read", "reset" -> {}              // Does nothing: these actions do not need any additional input
+            case "read", "reset" -> {}                       // Does nothing: these actions do not need any additional input
             case "add" -> jsonObject = weaponData();
             case "modify" -> {
                 System.out.println("Old weapon's name:");
