@@ -59,6 +59,7 @@ public class Request {
     private void sendPost () throws IOException {
         HttpPost request = new HttpPost(url);
         HttpEntity messageEntity = new StringEntity(String.valueOf(jsonObject), ContentType.APPLICATION_JSON);
+        //HttpEntity messageEntity = new ByteArrayEntity(jsonObject.toString().getBytes()); <-------------------- Is this doing exactly the same thing?
         request.setEntity(messageEntity);
 
         CloseableHttpResponse response = httpClient.execute(request);
