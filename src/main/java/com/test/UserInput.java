@@ -12,28 +12,35 @@ class UserInput {
     private String userChoice;
     private String oldWeapon;
 
-    public void setUserChoice(String userChoice) {
-        this.userChoice = userChoice;
-    }
-    public void setOldWeapon(String oldWeapon) {
-        this.oldWeapon = oldWeapon;
-    }
+    /**
+     * Getters and setters
+     */
     public String getUserChoice() {
         return this.userChoice;
     }
     public String getOldWeapon() {
         return this.oldWeapon;
     }
+    private void setUserChoice(String userChoice) {
+        this.userChoice = userChoice;
+    }
+    private void setOldWeapon(String oldWeapon) {
+        this.oldWeapon = oldWeapon;
+    }
 
     /**
      * Collects user input using the Scanner class.
-     *
      * @return The user's input as a String.
      */
     private String userInputScanner () {
         Scanner scanner = new Scanner(System.in);
         return scanner.nextLine().toLowerCase();    // All user inputs will be handled as lower-case
     }
+
+    /**
+     * Used by userJson method to ask and receive data from the user.
+     * @return Data is returned as JSON object.
+     */
 
     private JSONObject weaponData () {
         JSONObject jsonObject = new JSONObject();
@@ -52,15 +59,14 @@ class UserInput {
 
     /**
      * Prompts the user for their choice and collects input based on the selected action.
-     *
-     * @return A map containing user input for the selected action.
+     * @return User input is returned as JSON object.
      */
-    JSONObject userJson () {
+    public JSONObject userJson () {
         setUserChoice(userInputScanner());
         JSONObject jsonObject = new JSONObject();
 
         switch (getUserChoice()) {                           // Process user choice
-            case "read", "reset" -> {}                       // Does nothing: these actions do not need any additional input
+            case "read", "reset" -> {}                       // Does nothing: these actions do not need any additional output
             case "add" -> jsonObject = weaponData();
             case "modify" -> {
                 System.out.println("Old weapon's name:");
@@ -70,7 +76,6 @@ class UserInput {
             case "delete" -> {
                 System.out.println("Weapon's name:");
                 setOldWeapon(userInputScanner());
-                return null;
             }
             case "exit" -> System.exit(0);
             default -> System.out.println("Incorrect input\n");
