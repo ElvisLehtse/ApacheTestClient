@@ -50,16 +50,15 @@ public class Request {
     }
 
     private void sendGet () throws IOException {
-        HttpGet request = new HttpGet(url);
+        HttpGet request = new HttpGet(STR."\{url}Weapons");
 
         CloseableHttpResponse response = httpClient.execute(request);
         responseMessage(response);
     }
 
     private void sendPost () throws IOException {
-        HttpPost request = new HttpPost(url);
+        HttpPost request = new HttpPost(STR."\{url}Weapons");
         HttpEntity messageEntity = new StringEntity(String.valueOf(jsonObject), ContentType.APPLICATION_JSON);
-        //HttpEntity messageEntity = new ByteArrayEntity(jsonObject.toString().getBytes()); <-------------------- Is this doing exactly the same thing?
         request.setEntity(messageEntity);
 
         CloseableHttpResponse response = httpClient.execute(request);
@@ -67,7 +66,7 @@ public class Request {
     }
 
     private void sendPutModify () throws IOException, URISyntaxException {
-        URIBuilder builder = new URIBuilder(url);
+        URIBuilder builder = new URIBuilder(STR."\{url}Weapons/ChangeObject");
         builder.setParameter("modify", userInput.getOldWeapon());
         HttpPut request = new HttpPut(builder.build());
         HttpEntity messageEntity = new StringEntity(String.valueOf(jsonObject), ContentType.APPLICATION_JSON);
@@ -77,19 +76,17 @@ public class Request {
         responseMessage(response);
     }
 
-    private void sendPutReset () throws IOException, URISyntaxException {
-        URIBuilder builder = new URIBuilder(url);
-        builder.setParameter("reset", "");
-        HttpPut request = new HttpPut(builder.build());
+    private void sendDelete () throws IOException, URISyntaxException {
+        URIBuilder builder = new URIBuilder(STR."\{url}Weapons/ChangeObject");
+        builder.setParameter("delete", userInput.getOldWeapon());
+        HttpDelete request = new HttpDelete(builder.build());
 
         CloseableHttpResponse response = httpClient.execute(request);
         responseMessage(response);
     }
 
-    private void sendDelete () throws IOException, URISyntaxException {
-        URIBuilder builder = new URIBuilder(url);
-        builder.setParameter("delete", userInput.getOldWeapon());
-        HttpDelete request = new HttpDelete(builder.build());
+    private void sendPutReset () throws IOException {
+        HttpPut request = new HttpPut(STR."\{url}Weapons/Reset");
 
         CloseableHttpResponse response = httpClient.execute(request);
         responseMessage(response);
