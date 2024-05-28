@@ -66,8 +66,8 @@ public class Request {
     }
 
     private void sendPutModify () throws IOException, URISyntaxException {
-        URIBuilder builder = new URIBuilder(STR."\{url}Weapons/ChangeObject");
-        builder.setParameter("modify", userInput.getOldWeapon());
+        URIBuilder builder = new URIBuilder(STR."\{url}Weapons/ID");
+        builder.setParameter("ID", userInput.getOldWeapon());
         HttpPut request = new HttpPut(builder.build());
         HttpEntity messageEntity = new StringEntity(String.valueOf(jsonObject), ContentType.APPLICATION_JSON);
         request.setEntity(messageEntity);
@@ -77,8 +77,8 @@ public class Request {
     }
 
     private void sendDelete () throws IOException, URISyntaxException {
-        URIBuilder builder = new URIBuilder(STR."\{url}Weapons/ChangeObject");
-        builder.setParameter("delete", userInput.getOldWeapon());
+        URIBuilder builder = new URIBuilder(STR."\{url}Weapons/ID");
+        builder.setParameter("ID", userInput.getOldWeapon());
         HttpDelete request = new HttpDelete(builder.build());
 
         CloseableHttpResponse response = httpClient.execute(request);
